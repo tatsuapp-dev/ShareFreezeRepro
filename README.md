@@ -17,7 +17,7 @@ It came up while building a small transcription app. The share sheet froze the a
 - **Device:** iPhone 12 mini
 - **OS:** iOS 26.6
 - Nothing else was tested by us. Reports from other people on other versions are linked at the end.
-- **Update, 2026-10-02:** With the same device updated to iOS 26.6.2, the freeze did not reproduce with Claude, ChatGPT, or Gemini. We do not know whether this is because of the OS update, the receiving apps, or the state of the device.
+- **Update, 2026-10-02:** With the same device updated to iOS 26.6.2, the freeze at first did not reproduce with Claude, ChatGPT, or Gemini. Later the same day, after one unrelated app was deleted from the device, it reproduced with ChatGPT. So it still happens on iOS 26.6.2, and whether it shows up depends on something in the state of the device that we do not understand.
 
 ## The symptom
 
@@ -50,7 +50,7 @@ All three item types we tried froze on the first attempt. After the freeze, the 
 
 4. **What did not matter:** how you return (back button or app switcher), the type of item shared, and which app presents the share sheet.
 
-5. **Which receiving app triggers it is not stable.** On our device, the set of receiving apps that caused the freeze changed after simply installing one more app. We could not find a receiving app that is reliably safe.
+5. **Which receiving app triggers it is not stable.** On our device, the set of receiving apps that caused the freeze changed after simply installing one more app, and changed again, on another day, after simply deleting an unrelated app. We could not find a receiving app that is reliably safe.
 
 6. **It is not specific to debug builds.** An App Store–signed release build behaved the same way.
 
@@ -62,6 +62,7 @@ All three item types we tried froze on the first attempt. After the freeze, the 
 - On returning to the app, presenting a document picker and dismissing it shortly afterwards.
 - On returning to the app, making a hidden text field the first responder to bring up the keyboard.
 - Routing the share through an intermediate app.
+- Not setting `sourceView` on the share sheet's `popoverPresentationController` on iPhone. (This was reported to fix a different symptom in [fluttercommunity/plus_plugins #3943](https://github.com/fluttercommunity/plus_plugins/issues/3943).) Tested once, on iOS 26.6.2 with ChatGPT; the app still froze. Our test build only skipped the assignment; it still read the property to display whether it was nil.
 
 Other developers have reported that presenting the share sheet from a dedicated, temporary window fixed an older iOS 16 issue but did not help on iOS 26 (see the expo issue below).
 
@@ -97,8 +98,8 @@ License: MIT (see `LICENSE`).
 
 共有シートから、前面に開くアプリ（Claude・ChatGPT・Gemini など）へ渡して戻ると、元のアプリにタッチが一切届かなくなる iOS の不具合の再現アプリと、調べた結果です。
 
-非エンジニアの個人開発者が、AI（Anthropic の Claude）と一緒に調べました。実機での操作と観察は人が、仮説・計測の仕組み・結果の読み解きは AI が担いました。確かめたのは iPhone 12 mini・iOS 26.6 だけです。
+非エンジニアの個人開発者が、AI（Anthropic の Claude）と一緒に調べました。実機での操作と観察は人が、仮説・計測の仕組み・結果の読み解きは AI が担いました。確かめたのは iPhone 12 mini・iOS 26.6 と 26.6.2 だけです。2026-10-02、同じ端末を iOS 26.6.2 に更新した状態でも再現しました（はじめは再現せず、関係のないアプリを 1 つ消したあとに再現しました）。
 
-分かったことの要点は、タッチがアプリのプロセスまで届いていないこと、別プロセスが描く UI（キーボード・ファイル選択画面など）には届くのにアプリ自身のビューには届かないこと、アプリ側の回避策はどれも効かなかったことです。
+分かったことの要点は、タッチがアプリのプロセスまで届いていないこと、別プロセスが描く UI（キーボード・ファイル選択画面など）には届くのにアプリ自身のビューには届かないこと、アプリ側の回避策はどれも効かなかったことです。iPhone で共有シートに sourceView を指定しないようにしても、直りませんでした。
 
 Apple とのやり取りは予定していません。この記録と再現アプリは、Feedback への添付・引用・作り直しなど、自由に使ってください。
