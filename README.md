@@ -17,6 +17,7 @@ It came up while building a small transcription app. The share sheet froze the a
 - **Device:** iPhone 12 mini
 - **OS:** iOS 26.6
 - Nothing else was tested by us. Reports from other people on other versions are linked at the end.
+- **Update, 2026-10-02:** With the same device updated to iOS 26.6.2, the freeze did not reproduce with Claude, ChatGPT, or Gemini. We do not know whether this is because of the OS update, the receiving apps, or the state of the device.
 
 ## The symptom
 
