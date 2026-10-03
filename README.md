@@ -18,6 +18,7 @@ It came up while building a small transcription app. The share sheet froze the a
 - **OS:** iOS 26.6
 - Nothing else was tested by us. Reports from other people on other versions are linked at the end.
 - **Update, 2026-10-02:** With the same device updated to iOS 26.6.2, the freeze at first did not reproduce with Claude, ChatGPT, or Gemini. Later the same day, after one unrelated app was deleted from the device, it reproduced with ChatGPT. So it still happens on iOS 26.6.2, and whether it shows up depends on something in the state of the device that we do not understand.
+- **Update, 2026-10-03:** On the same device (iOS 26.6.2), right after ChatGPT and Gemini had been updated from the App Store (Claude's version had also changed since our previous test), a first pass sharing to Claude, Gemini and ChatGPT in a row did not freeze. In the passes that followed, ChatGPT froze 3 times out of 4, Claude once out of 3, and Gemini never (0 of 4). This is the third time we have seen the same shape: after something about the installed apps changes (install, delete, or update), the first attempts do not freeze, and then one receiving app freezes consistently. If you are testing this yourself, do not conclude it is fixed from a single pass right after an update. Receiving app versions at the time: ChatGPT 1.2026.267, Gemini 1.2026.3870402, Claude 1.260928.20.
 
 ## The symptom
 
@@ -50,7 +51,7 @@ All three item types we tried froze on the first attempt. After the freeze, the 
 
 4. **What did not matter:** how you return (back button or app switcher), the type of item shared, and which app presents the share sheet.
 
-5. **Which receiving app triggers it is not stable.** On our device, the set of receiving apps that caused the freeze changed after simply installing one more app, and changed again, on another day, after simply deleting an unrelated app. We could not find a receiving app that is reliably safe.
+5. **Which receiving app triggers it is not stable.** On our device, the set of receiving apps that caused the freeze changed after simply installing one more app, and changed again, on another day, after simply deleting an unrelated app. It changed a third time after two receiving apps were updated. In all three cases the first attempts after the change did not freeze. We could not find a receiving app that is reliably safe.
 
 6. **It is not specific to debug builds.** An App Store–signed release build behaved the same way.
 
@@ -98,7 +99,7 @@ License: MIT (see `LICENSE`).
 
 共有シートから、前面に開くアプリ（Claude・ChatGPT・Gemini など）へ渡して戻ると、元のアプリにタッチが一切届かなくなる iOS の不具合の再現アプリと、調べた結果です。
 
-非エンジニアの個人開発者が、AI（Anthropic の Claude）と一緒に調べました。実機での操作と観察は人が、仮説・計測の仕組み・結果の読み解きは AI が担いました。確かめたのは iPhone 12 mini・iOS 26.6 と 26.6.2 だけです。2026-10-02、同じ端末を iOS 26.6.2 に更新した状態でも再現しました（はじめは再現せず、関係のないアプリを 1 つ消したあとに再現しました）。
+非エンジニアの個人開発者が、AI（Anthropic の Claude）と一緒に調べました。実機での操作と観察は人が、仮説・計測の仕組み・結果の読み解きは AI が担いました。確かめたのは iPhone 12 mini・iOS 26.6 と 26.6.2 だけです。2026-10-02、同じ端末を iOS 26.6.2 に更新した状態でも再現しました（はじめは再現せず、関係のないアプリを 1 つ消したあとに再現しました）。2026-10-03、ChatGPT と Gemini を更新した直後は 3 つとも再現せず、そのあと ChatGPT で続けて再現しました（4 回中 3 回。Gemini は 0 回）。入っているアプリの構成が変わった直後は再現しないことが 3 回続いています。
 
 分かったことの要点は、タッチがアプリのプロセスまで届いていないこと、別プロセスが描く UI（キーボード・ファイル選択画面など）には届くのにアプリ自身のビューには届かないこと、アプリ側の回避策はどれも効かなかったことです。iPhone で共有シートに sourceView を指定しないようにしても、直りませんでした。
 
